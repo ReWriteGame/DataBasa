@@ -29,8 +29,6 @@ namespace DataBasa
             openFileDialog.Filter = "Text files(*.bas)|*.bas|All files(*.*)|*.*";
             saveFileDialog.Filter = "Text files(*.bas)|*.bas|All files(*.*)|*.*";
 
-
-
         }
 
 
@@ -227,7 +225,7 @@ namespace DataBasa
                 return;
             }
 
-            int indexRows = 0;// index строки для записи что бы небыло пропусков в exel
+            bool isFound = false;// если какая-то информация была найденна 
             for (int i = 0; i < sizeArr; i++)
             {
                 // преобразуем типы даннх в string для .IndexOf(searchInfo)
@@ -237,31 +235,24 @@ namespace DataBasa
 
                 // IndexOf() вернет -1 если ничего не найдено
                 // поиск информации в строках
-                if (temp1.IndexOf(searchInfo) != -1 ||
-                    temp2.IndexOf(searchInfo) != -1 ||
+                if (temp1.IndexOf(searchInfo) > -1 ||
+                    temp2.IndexOf(searchInfo) > -1 ||
                      
-                    arr[i].NumberOfCar.IndexOf(searchInfo) != -1 ||
-                    arr[i].ColourOfCar.IndexOf(searchInfo) != -1 ||
-                    arr[i].MarkOfCar.IndexOf(searchInfo) != -1 ||
-                    arr[i].FullName.IndexOf(searchInfo) != -1 ||
-                    arr[i].Address.IndexOf(searchInfo) != -1)
+                    arr[i].NumberOfCar.IndexOf(searchInfo) > -1 ||
+                    arr[i].ColourOfCar.IndexOf(searchInfo) > -1 ||
+                    arr[i].MarkOfCar.IndexOf(searchInfo) > -1 ||
+                    arr[i].FullName.IndexOf(searchInfo) > -1 ||
+                    arr[i].Address.IndexOf(searchInfo) > -1)
                 {
-                    exelConsole.Rows.Clear();// очистка таблици
+                    if (isFound == false) exelConsole.Rows.Clear();// очистка таблици 1 раз
 
-                    // заполняем таблицу по indexRows что бы небыло пропусков
-                    exelConsole[0, indexRows].Value = arr[i].ID;// ID
-                    exelConsole[1, indexRows].Value = arr[i].Year;// Год
-                    exelConsole[2, indexRows].Value = arr[i].NumberOfCar;// Номер
-                    exelConsole[3, indexRows].Value = arr[i].ColourOfCar;// Цвет
-                    exelConsole[4, indexRows].Value = arr[i].MarkOfCar;// Марка
-                    exelConsole[5, indexRows].Value = arr[i].FullName;// ФИО
-                    exelConsole[6, indexRows].Value = arr[i].Address;// Адрес
-
-                    indexRows++;
+                    exelConsole.Rows.Add(arr[i].ID, arr[i].Year, arr[i].NumberOfCar, arr[i].ColourOfCar, arr[i].MarkOfCar, arr[i].FullName, arr[i].Address);// добавим инфу в exel если что-то совпало
+                   
+                    isFound = true;
                 }
             }
 
-            if (indexRows != 0) MessageBox.Show("Найденная информация.");
+            if (isFound) MessageBox.Show("Найденная информация.");
             else MessageBox.Show("Ничего не найдено");
         }
 
